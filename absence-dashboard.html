@@ -295,18 +295,17 @@
         alert('تعذر نسخ البيانات.');
       });
     }
-    // إعدادات SheetDB API
-    const SHEETDB_URL = 'https://sheetdb.io/api/v1/rnkdh4ly6qmo8';
+    // مصدر بيانات الغياب المحلي الخاص بمدرسة السيب
+    const ABSENCE_STORAGE_KEY = 'alSeebAbsenceRecords';
     let allData = [];
     let filteredData = [];
     let currentPage = 1;
     const rowsPerPage = 25;
 
-    // جلب البيانات من SheetDB
+    // قراءة بيانات الغياب من التخزين المحلي
     async function fetchAbsenceData() {
       try {
-        const res = await fetch(SHEETDB_URL);
-        const data = await res.json();
+        const data = JSON.parse(localStorage.getItem(ABSENCE_STORAGE_KEY) || '[]');
         allData = Array.isArray(data) ? data : (data.data || []);
         renderFilters();
         applyFilters();

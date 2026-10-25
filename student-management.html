@@ -1198,11 +1198,11 @@
         <div class="filters-container">
           <select class="filter-select input-responsive" id="gradeFilter">
             <option value="">جميع الصفوف</option>
-            <option value="خامس">الصف الخامس</option>
-            <option value="سادس">الصف السادس</option>
-            <option value="سابع">الصف السابع</option>
-            <option value="ثامن">الصف الثامن</option>
-            <option value="تاسع">الصف التاسع</option>
+            <option value="أول">الصف الأول</option>
+            <option value="ثاني">الصف الثاني</option>
+            <option value="ثالث">الصف الثالث</option>
+            <option value="رابع">الصف الرابع</option>
+
           </select>
           
           <select class="filter-select" id="classFilter">
@@ -1615,23 +1615,15 @@ function sendAbsenceToGoogleSheets() {
     alert('يرجى تحديد الطلاب الغائبين أولاً');
     return;
   }
-  // رابط SheetDB API
-  const sheetdbUrl = 'https://sheetdb.io/api/v1/rnkdh4ly6qmo8';
-  fetch(sheetdbUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ data: absentStudents })
-  })
-  .then(response => response.json())
-  .then(data => {
-    showUpdateMessage('تم إرسال الغياب بنجاح إلى Google Sheets عبر SheetDB');
+  try {
+    const stored = JSON.parse(localStorage.getItem('alSeebAbsenceRecords') || '[]');
+    const records = Array.isArray(stored) ? stored : [];
+    localStorage.setItem('alSeebAbsenceRecords', JSON.stringify(records.concat(absentStudents)));
+    showUpdateMessage('تم حفظ الغياب محليًا في هذا المتصفح');
     clearSelection();
-  })
-  .catch(error => {
-    showError('فشل في إرسال الغياب: ' + error);
-  });
+  } catch (error) {
+    showError('تعذر حفظ الغياب محليًا');
+  }
 }
 
 
